@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulsePeak Gym</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    #logo {
+      border: 5px solid white;
+      border-radius: 50%;
+      padding: 5px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fafafa;
+    }
+
+    p {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1em;
+      font-weight: 300;
+      line-height: 1.7em;
+      color: #999;
+    }
+
+    a,
+    a:hover,
+    a:focus {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .navbar {
+      padding: 15px 10px;
+      background: #fff;
+      border: none;
+      border-radius: 0;
+      margin-bottom: 40px;
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-btn {
+      box-shadow: none;
+      outline: none !important;
+      border: none;
+    }
+
+    .line {
+      width: 100%;
+      height: 1px;
+      border-bottom: 1px dashed #ddd;
+      margin: 40px 0;
+    }
+
+    .wrapper {
+      display: flex;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    #sidebar {
+      min-width: 250px;
+      max-width: 250px;
+      background: #000000;
+      color: #fff;
+      transition: all 0.3s;
+    }
+
+    #sidebar.active {
+      margin-left: -250px;
+    }
+
+    #sidebar .sidebar-header {
+      padding: 20px;
+      background: #000000;
+    }
+
+    #sidebar ul.components {
+      padding: 20px 0;
+      border-bottom: 1px solid #000000;
+    }
+
+    #sidebar ul p {
+      color: #fff;
+      padding: 10px;
+    }
+
+    #sidebar ul li a {
+      padding: 10px;
+      font-size: 1.1em;
+      display: block;
+    }
+
+    #sidebar ul li a:hover {
+      color: #000000;
+      background: #fff;
+    }
+
+    #sidebar ul li.active>a,
+    a[aria-expanded="true"] {
+      color: #fff;
+      background: #242424;
+    }
+
+    a[data-toggle="collapse"] {
+      position: relative;
+    }
+
+    .dropdown-toggle::after {
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+    }
+
+    ul ul a {
+      font-size: 0.9em !important;
+      padding-left: 30px !important;
+      background: #000000;
+    }
+
+    ul.CTAs {
+      padding: 20px;
+    }
+
+    ul.CTAs a {
+      text-align: center;
+      font-size: 0.9em !important;
+      display: block;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+
+    a.download {
+      background: #fff;
+      color: #000000;
+    }
+
+    a.article,
+    a.article:hover {
+      background: #000000 !important;
+      color: #fff !important;
+    }
+
+    #content {
+      width: 100%;
+      padding: 20px;
+      min-height: 100vh;
+      transition: all 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        margin-left: -250px;
+      }
+
+      #sidebar.active {
+        margin-left: 0;
+      }
+
+      #sidebarCollapse span {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrapper">
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <a class="navbar-brand" [routerLink]="['/']" style="flex-grow: 1;">
+            <img id="logo" src="assets/pulsepeak.png" alt="PulsePeak Logo" height="100">
+          </a>
+        </div>
+        <ul class="list-unstyled components">
+          <li [ngClass]="{ 'active': currentView === 'users' }">
+            <a (click)="switchView('users')">All Users</a>
+          </li>
+          <li style="display: none;" [ngClass]="{ 'active': currentView === 'coaches' }">
+            <a (click)="switchView('coaches')">All Coaches</a>
+          </li>
+          <li [ngClass]="{ 'active': currentView === 'addCoach' }">
+            <a (click)="switchView('addCoach')">Add New Coach</a>
+          </li>
+          <li [ngClass]="{ 'active': currentView === 'cards' }">
+            <a (click)="switchView('cards')">Cards</a>
+          </li>
+          <li [ngClass]="{ 'active': currentView === 'contactMessages' }">
+            <a (click)="switchView('contactMessages')">Contact Messages</a>
+          </li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+          <li>
+            <a (click)="logout()" class="download">Log Out</a>
+          </li>
+        </ul>
+      </nav>
+      <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <img id="userfoto" src="assets/user.jpg" alt="User" height="100">
+            <a style="padding-left: 10px;">Welcome Admin</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="nav navbar-nav ml-auto"></ul>
+            </div>
+          </div>
+        </nav>
+        <div class="container mt-5" *ngIf="currentView === 'users'">
+          <h2 class="text-center" *ngIf="selectedRole == 'COACH'">All Coaches</h2>
+          <h2 class="text-center" *ngIf="selectedRole == 'USER'">All Users</h2>
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <input type="text" class="form-control" placeholder="Search by name or email" [(ngModel)]="searchTerm" (input)="filterUsers()">
+            </div>
+            <div class="col-md-4">
+              <select class="form-control" [(ngModel)]="selectedRole" (change)="filterUsers()">
+                <option value="USER">User</option>
+                <option value="COACH">Coach</option>
+              </select>
+            </div>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th *ngIf="selectedRole !== 'COACH'">Membership Status</th>
+                <th *ngIf="selectedRole !== 'COACH'">Membership Expiry Date</th>
+                <th *ngIf="selectedRole !== 'COACH'">Assign Coach</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of filteredUsers">
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td *ngIf="selectedRole !== 'COACH'">
+                  {{ user.membershipStatus }}
+                </td>
+                <td *ngIf="selectedRole !== 'COACH'">
+                  {{ user.membershipExpiryDate ? (user.membershipExpiryDate | date:'yyyy-MM-dd') : 'Not a paid member' }}
+                </td>
+                <td *ngIf="selectedRole !== 'COACH'">
+                  <select [(ngModel)]="user.selectedCoach" name="coach" class="form-control ml-3" style="display: inline-block; width: auto;">
+                    <option [ngValue]="null">--</option>
+                    <option *ngFor="let coach of coaches" [ngValue]="coach.id">{{ coach.name }}</option>
+                  </select>
+                  <button class="btn btn-primary btn-sm ml-3" (click)="assignCoachToUser(user.id, user.selectedCoach)">Assign Coach</button>
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-sm ml-3" (click)="deleteUser(user.id)" *ngIf="selectedRole !== 'COACH'">Delete</button>
+                  <button class="btn btn-danger btn-sm ml-3" (click)="deleteCoach(user.id)" *ngIf="selectedRole === 'COACH'">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="successMessage && currentView === 'users'" class="alert alert-success mt-3">{{ successMessage }}</div>
+          <div *ngIf="errorMessage && currentView === 'users'" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        </div>
+        <div class="container mt-5" *ngIf="currentView === 'coaches'">
+          <h2 class="text-center">All Coaches</h2>
+          <ul class="list-group">
+            <li *ngFor="let coach of coaches" class="list-group-item d-flex justify-content-between align-items-center">
+              {{ coach.name }} ({{ coach.email }})
+              <div>
+                <button class="btn btn-warning btn-sm mr-2" (click)="updateCoach(coach)">Update</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteCoach(coach.id)">Delete</button>
+              </div>
+            </li>
+          </ul>
+          <div *ngIf="successMessage && currentView === 'coaches'" class="alert alert-success mt-3">{{ successMessage }}</div>
+          <div *ngIf="errorMessage && currentView === 'coaches'" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        </div>
+
+        <div class="container mt-5" *ngIf="currentView === 'addCoach'">
+          <h2 class="text-center">Add New Coach</h2>
+          <form (ngSubmit)="addCoach()">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" class="form-control" [(ngModel)]="newCoach.name" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" class="form-control" [(ngModel)]="newCoach.email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" class="form-control" [(ngModel)]="newCoach.password" name="password" required />
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Add Coach</button>
+          </form>
+          <div *ngIf="successMessage && currentView === 'addCoach'" class="alert alert-success mt-3">{{ successMessage }}</div>
+          <div *ngIf="errorMessage && currentView === 'addCoach'" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        </div>
+
+        <!-- Contact Messages View -->
+<div class="container mt-5" *ngIf="currentView === 'contactMessages'">
+  <h2 class="text-center">Contact Messages</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Messages</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let group of groupedMessages">
+        <td>
+          <button class="btn btn-link" type="button" (click)="toggleExpand(group.email)">
+            {{ group.email }}
+          </button>
+        </td>
+        <td>{{ group.name }}</td>
+        <td>
+          <ng-container *ngIf="expandedEmail === group.email">
+            <ul>
+              <li *ngFor="let message of group.messages">
+                {{ message.comment }}
+                <button class="btn btn-danger btn-sm ml-2" (click)="deleteMessage(message.id)">
+                  Delete
+                </button>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-container *ngIf="expandedEmail !== group.email">
+            {{ group.messages.length }} messages
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+        <div class="container mt-5" *ngIf="currentView === 'cards'">
+          <h2 class="text-center">Manage Cards</h2>
+          <div class="row">
+            <div class="col-md-4" *ngFor="let card of cards">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">{{ card.title }}</h5>
+                  <p class="card-text">{{ card.content }}</p>
+                  <div class="d-flex">
+                    <button class="btn btn-primary me-2" (click)="editCard(card)">Edit</button>
+                    <button class="btn btn-danger" (click)="deleteCard(card.id)">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-success mt-3" (click)="addNewCard()">Add New Card</button>
+        </div>
+        
+        <!-- Edit Card Modal -->
+        <div *ngIf="selectedCard" class="modal show fade" tabindex="-1" role="dialog" style="display: block;">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">{{ selectedCardIndex === -1 ? 'Add New Card' : 'Edit Card' }}</h5>
+                <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="cardForm" (ngSubmit)="saveCard()">
+                  <div class="form-group">
+                    <label for="cardTitle">Title</label>
+                    <input type="text" id="cardTitle" class="form-control" formControlName="title" required />
+                    <div *ngIf="cardForm.controls['title'].invalid && (cardForm.controls['title'].dirty || cardForm.controls['title'].touched)" class="text-danger">
+                      <div *ngIf="cardForm.controls['title'].errors?.['required']">Title is required.</div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="cardContent">Content</label>
+                    <textarea id="cardContent" class="form-control" formControlName="content" maxlength="200" required></textarea>
+                    <div *ngIf="cardForm.controls['content'].invalid && (cardForm.controls['content'].dirty || cardForm.controls['content'].touched)" class="text-danger">
+                      <div *ngIf="cardForm.controls['content'].errors?.['required']">Content is required.</div>
+                      <div *ngIf="cardForm.controls['content'].errors?.['maxlength']">Content cannot exceed 200 characters.</div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" [disabled]="cardForm.invalid">Save</button>
+                    <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </header>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script src="/my-app/src/app/app.js"></script>
+</body>
+
+</html>

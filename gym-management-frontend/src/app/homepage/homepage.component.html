@@ -1,0 +1,225 @@
+<!-- src/app/home/home.component.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulsePeak Gym</title>
+  <!-- Bootstrap CSS link -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .hero-section { position: relative; overflow: hidden; }
+    .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); }
+    .hero-background { width: 100%; height: 500px; object-fit: cover; opacity: 0.7; }
+    .container { position: relative; z-index: 2; text-align: center; color: #fff; width: 100%; height: auto; }
+    .hero-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; height: 500px; }
+    .btn-danger { margin-top: 20px; }
+    .container p { margin-bottom: 30px; }
+    .btn-primary { background-color: #007BFF; color: white; border: none; padding: 10px 20px; cursor: pointer; font-size: 16px; text-decoration: none; }
+    .why-choose-us-section { background-color: #000000; padding: 50px 0; }
+    .card-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .card { background-color: rgb(179, 34, 34); padding: 20px; border-radius: 4px; box-shadow: 0 0 0 3px #fff, 0 0 10px rgba(157, 155, 155, 0.1); }
+    .card h3 { font-size: 18px; color: #000000; font-weight: bold; }
+    .card p { color: #fcfbfb; }
+    .contact-info { justify-content: center; background-color: #000000; color: white; display: flex; align-items: center; margin: 0 !important; padding: 0; box-sizing: border-box; }
+    .contact-info .icon { margin-right: 10px; }
+    .contact-info .text { margin-right: 15px; }
+    footer.bg-dark { background-color: #000 !important; color: #fff !important; margin-top: 0; padding-top: 0; }
+    footer a.text-white:hover { color: #aaa !important; }
+    .icon { font-size: 1.5em; }
+    .text { font-size: 1em; }
+    #logo { border: 5px solid white; border-radius: 50%; padding: 5px; box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+    .contact { background-color: #000000; color: #FF0000; padding: 20px; border-radius: 10px; }
+    .contact input[type="text"], .contact input[type="submit"], .contact input[type="reset"] { background-color: white; border: 2px solid #FF0000; border-radius: 5px; padding: 10px; margin-bottom: 10px; margin-right: 10px; }
+    .contact input[type="submit"], .contact input[type="reset"] { background-color: #FF0000; color: white; border-color: #FF0000; }
+    .contact input[type="submit"]:hover, .contact input[type="reset"]:hover { background-color: #FF3333; border-color: #FF3333; }
+    #myBtn { position: fixed; bottom: 20px; right: 30px; z-index: 99; border: none; outline: none; background-color: red; color: white; cursor: pointer; padding: 15px; border-radius: 10px; }
+    #myBtn:hover { background-color: #555; }
+  </style>
+</head>
+<body>
+  <header>
+    <button *ngIf="showButton" (click)="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border-bottom: 2px solid #ccc;">
+      <div class="container-fluid">
+        <a class="navbar-brand" [routerLink]="['/']">
+        <div>
+          
+              <img id="logo" src="assets/pulsepeak.png" alt="PulsePeak Logo" height="120">
+         
+          <span class="navbar-text mx-auto" style="color: white; font-size: 1.5em; font-weight: bold; padding: 5%;">
+              GymPulse
+          </span>
+        </div>
+      </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+              <ul class="navbar-nav" style="font-size: 1.2em;">
+                  <li class="nav-item" style="padding-right: 10px;">
+                      <a class="nav-link" [routerLink]="['/']">Home</a>
+                  </li>
+                  <li class="nav-item" style="padding-right: 10px;">
+                      <a class="nav-link" href="#contact-info">Contact Us</a>
+                  </li>
+                  <li class="nav-item" *ngIf="!authService.isLoggedIn()" style="padding-right: 10px;">
+                      <a style="border: 1px solid white; color:rgb(179, 34, 34)" class="nav-link" [routerLink]="['/login']">Login</a>
+                  </li>
+                  <li class="nav-item" *ngIf="!authService.isLoggedIn()" style="padding-right: 10px;">
+                      <a style="border: 1px solid white; color:rgb(179, 34, 34)" class="nav-link" [routerLink]="['/register']">Register</a>
+                  </li>
+                  <li class="nav-item" *ngIf="authService.isLoggedIn()" style="padding-right: 10px;">
+                      <a class="nav-link"
+                          [routerLink]="authService.getUserRole() === 'ADMIN' ? '/admin' : (authService.getUserRole() === 'COACH' ? '/coach-dashboard' : '/profile')">Profile</a>
+                  </li>
+                  <li class="nav-item" *ngIf="authService.isLoggedIn()" style="padding-right: 10px;">
+                      <a class="nav-link" (click)="logout()">Logout</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+  
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <img src="assets/vucut-gelistirme.jpg" alt="Fitness" class="img-fluid hero-background">
+      <div class="container position-relative">
+        <div class="row">
+          <div class="col-12">
+            <div class="hero-content text-center text-white">
+              <h1>BE STRONG TRAIN HARD</h1>
+              <p>Shape your body and build your best version</p>
+              <a [routerLink]="['/getinfo']" class="btn btn-danger">Get Info</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Why Choose Us Section -->
+    <div class="why-choose-us-section" style="border-bottom: 2px solid #ccc;">
+      <div class="container mt-5">
+        <h2 class="text-center">Push Your Limits Forward!</h2>
+        <div class="custom-slider">
+          <div class="slider-container">
+            <div class="slider-track" #sliderTrack>
+              <div class="slider-card" *ngFor="let card of cards">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="card-title">{{ card.title }}</h3>
+                    <p class="card-text">{{ card.content }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="slider-control prev" (click)="prevSlide()">&#10094;</button>
+          <button class="slider-control next" (click)="nextSlide()">&#10095;</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        <div id="sporcu1" style="flex: 1; min-width: 200px;">
+          <img src="assets/sporcu1.jpg" alt="Fitness activity" style="width: 100%; height: auto;">
+        </div>
+        <div id="sporcu2" style="flex: 1; min-width: 200px;">
+          <img src="assets/sporcu2.jpg" alt="Fitness activity" style="width: 100%; height: auto;">
+        </div>
+      </div>
+
+      <div id="sporcu3" style="flex: 1; min-width: 200px;">
+        <img src="assets/sporcu3.jpg" alt="Fitness activity" style="width: 100%; height: 550px;">
+      </div>
+      <div id="sporcu4" style="flex: 1; min-width: 200px;">
+        <img src="assets/sporcu4.jpg" alt="Fitness activity" style="width: 100%; height: 550px;">
+      </div>
+      <div id="sporcu5" style="flex: 1; min-width: 200px;">
+        <img src="assets/sporcu5.jpg" alt="Fitness activity" style="width: 100%; height: 550px;">
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+<div class="contact-us-form" style="border-bottom: 2px solid #ccc; text-align: center; background-color: black; color: red; padding: 20px;">
+  <h2>Contact Us</h2>
+  <form (ngSubmit)="sendMessage()" style="max-width: 600px; margin: 0 auto;" #contactForm="ngForm">
+    <div class="form-group" style="margin-bottom: 15px;">
+      <label for="name" style="float: left; margin-bottom: 5px;">Name:</label>
+      <input type="text" id="name" [(ngModel)]="contactMessage.name" name="name" required class="form-control" style="border: 2px solid red; color: red; background-color: black;" #name="ngModel">
+      <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+        <div *ngIf="name.errors?.['required']">Name is required.</div>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 15px;">
+      <label for="email" style="float: left; margin-bottom: 5px;">Email:</label>
+      <input type="email" id="email" [(ngModel)]="contactMessage.email" name="email" required email class="form-control" style="border: 2px solid red; color: red; background-color: black;" #email="ngModel">
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+        <div *ngIf="email.errors?.['required']">Email is required.</div>
+        <div *ngIf="email.errors?. ['email']">Invalid email address.</div>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 15px;">
+      <label for="comment" style="float: left; margin-bottom: 5px;">Comment:</label>
+      <textarea id="comment" [(ngModel)]="contactMessage.comment" name="comment" required class="form-control" style="border: 2px solid red; color: red; background-color: black;" #comment="ngModel"></textarea>
+      <div *ngIf="comment.invalid && (comment.dirty || comment.touched)" class="text-danger">
+        <div *ngIf="comment.errors?.['required']">Comment is required.</div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-danger" style="width: 100%;" [disabled]="contactForm.invalid">Send</button>
+  </form>
+  <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+</div>
+
+    
+    
+    
+    
+
+    <!-- Contact Info Section -->
+    <div id="contact-info" class="contact-info mb-4">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon text-white me-2">
+          <i class="fas fa-map-marker-alt"></i>
+        </span>
+        <span class="text text-white">333 Middle Winchendon Rd, Rindge, NH 03461</span>
+      </div>
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon text-white me-2">
+          <i class="fas fa-phone"></i>
+        </span>
+        <span class="text text-white">0537 731 8989</span>
+      </div>
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon text-white me-2">
+          <i class="fas fa-envelope"></i>
+        </span>
+        <span class="text text-white">PulsePeak.com</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-center text-lg-start text-white">
+      <div class="text-center p-3">
+        © 2024 Copyright:
+        <a class="text-white" href="https://PulsePeak.com/">PulsePeak.com</a>
+      </div>
+    </footer>
+  </header>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+</body>
+</html>
