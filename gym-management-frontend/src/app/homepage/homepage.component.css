@@ -1,0 +1,120 @@
+.custom-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  
+  .slider-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .slider-track {
+   
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    will-change: transform;
+  }
+  
+  .slider-card {
+    flex: 0 0 25%;
+    box-sizing: border-box;
+    padding: 7px;
+  }
+  
+  .card {
+    background-color: rgb(179, 34, 34);
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px #fff, 0 0 10px rgba(157, 155, 155, 0.1);
+    border: 2px solid white;
+    color: #fff;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    color: #000;
+    font-weight: bold;
+  }
+  
+  .card-text {
+    color: #fcfbfb;
+  }
+  
+  .slider-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  .slider-control.prev {
+    left: 0;
+  }
+  
+  .slider-control.next {
+    right: 0;
+  }
+  
+  .slider-control:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  .contact-us-form {
+    border-bottom: 2px solid #ccc;
+    text-align: center;
+    background-color: black;
+    color: red;
+    padding: 20px;
+  }
+  
+  .contact-us-form h2 {
+    margin-bottom: 20px;
+  }
+  
+  .contact-us-form .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .contact-us-form .form-control {
+    border: 2px solid red;
+    color: red;
+    background-color: black;
+  }
+  
+  .contact-us-form .btn {
+    width: 100%;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  #myBtn {
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    background-color: red; /* Set a background color */
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    padding: 15px; /* Some padding */
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  #myBtn:hover {
+    background-color: #555; /* Add a dark-grey background on hover */
+  }
+  
+  
